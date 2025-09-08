@@ -5,20 +5,29 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon server.js"
+    "dev": "npx nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ankurdotio/kodr-2-phase-2.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/ankurdotio/kodr-2-phase-2/issues"
+  },
+  "homepage": "https://github.com/ankurdotio/kodr-2-phase-2#readme",
   "dependencies": {
+    "@google/genai": "^1.17.0",
     "bcryptjs": "^3.0.2",
     "cookie-parser": "^1.4.7",
     "dotenv": "^17.2.2",
     "express": "^5.1.0",
+    "express-validator": "^7.2.1",
     "ioredis": "^5.7.0",
     "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.18.0",
-    "nodemon": "^3.1.10"
+    "mongoose": "^8.18.0"
   }
 }

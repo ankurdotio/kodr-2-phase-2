@@ -1,15 +1,17 @@
 const userModel = require("../models/user.model");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const redis = require("../db/cache");
-
+const redis = require("../db/redis")
 
 async function registerUser(req, res) {
 
-    const { username, password, email, fullName: { firstName, lastName } } = req.body;
+    const { username, email, password, fullName: { firstName, lastName } } = req.body;
 
     const isUserAlreadyExists = await userModel.findOne({
-        $or: [ { username }, { email } ]
+        $or: [
+            { username },
+            { email }
+        ]
     })
 
     if (isUserAlreadyExists) {
@@ -18,14 +20,12 @@ async function registerUser(req, res) {
         })
     }
 
-
     const hashedPassword = await bcrypt.hash(password, 10);
-
 
     const user = await userModel.create({
         username,
-        password: hashedPassword,
         email,
+        password: hashedPassword,
         fullName: {
             firstName,
             lastName
@@ -34,96 +34,88 @@ async function registerUser(req, res) {
 
     const token = jwt.sign({
         id: user._id,
-    }, process.env.JWT_SECRET, {
-        expiresIn: '1h',
-    })
+        role: user.role
+    }, process.env.JWT_SECRET)
+
 
     res.cookie("token", token)
 
     res.status(201).json({
         message: "User registered successfully",
         user: {
+            id: user._id,
             username: user.username,
             email: user.email,
             fullName: user.fullName,
-            _id: user._id
+            role: user.role
         }
     })
 
 }
 
-
 async function loginUser(req, res) {
 
-    const { username, password, email } = req.body;
+    const { email, password } = req.body;
 
     const user = await userModel.findOne({
-        $or: [ {
-            username
-        }, {
-            email
-        } ]
+        email
     })
 
     if (!user) {
-        return res.status(400).json({
+        return res.status(401).json({
             message: "Invalid credentials"
         })
     }
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
-
     if (!isPasswordValid) {
-        return res.status(400).json({
+        return res.status(401).json({
             message: "Invalid credentials"
         })
     }
 
     const token = jwt.sign({
         id: user._id,
-    }, process.env.JWT_SECRET, {
-        expiresIn: '1h',
-    })
+        role: user.role
+    }, process.env.JWT_SECRET)
+
 
     res.cookie("token", token)
+
 
     res.status(200).json({
         message: "User logged in successfully",
         user: {
+            id: user._id,
             username: user.username,
             email: user.email,
             fullName: user.fullName,
-            _id: user._id
+            role: user.role
         }
     })
 
+
 }
 
+async function logout(req, res) {
 
-async function logoutUser(req, res) {
+    const token = req.cookies.token
 
-    const token = req.cookies.token;
+    if (token) {
+        await redis.set(`blacklist:${token}`, "true", "EX", 60 * 60 * 24)
+    }
 
-    const blackListToken = await redis.set("blacklist:" + token, token)
+    res.clearCookie("token")
 
-    res.clearCookie("token");
     res.status(200).json({
         message: "User logged out successfully"
     })
-}
 
-async function getMe(req, res) {
-    const user = req.user;
-    res.status(200).json({
-        message: "User fetched successfully",
-        user
-    })
 }
 
 module.exports = {
     registerUser,
     loginUser,
-    logoutUser,
-    getMe
+    logout
 }

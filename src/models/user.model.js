@@ -7,13 +7,13 @@ const userSchema = new mongoose.Schema({
         required: true,
         unique: true
     },
-    password: {
-        type: String,
-    },
     email: {
         type: String,
         required: true,
         unique: true
+    },
+    password: {
+        type: String,
     },
     fullName: {
         firstName: {
@@ -24,9 +24,13 @@ const userSchema = new mongoose.Schema({
             type: String,
             required: true
         }
+    },
+    role: {
+        type: String,
+        enum: [ "user", "plus" ],
+        default: "user"
     }
 })
 
-const userModel = mongoose.model('user', userSchema);
 
-module.exports = userModel;
+module.exports = mongoose.model("user", userSchema)
