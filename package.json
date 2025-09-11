@@ -20,8 +20,9 @@
   },
   "homepage": "https://github.com/ankurdotio/kodr-2-phase-2#readme",
   "dependencies": {
-    "@google/genai": "^1.17.0",
+    "@google/genai": "^1.19.0",
     "bcryptjs": "^3.0.2",
+    "cookie": "^1.0.2",
     "cookie-parser": "^1.4.7",
     "dotenv": "^17.2.2",
     "express": "^5.1.0",
