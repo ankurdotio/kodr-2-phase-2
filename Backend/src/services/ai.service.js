@@ -21,7 +21,12 @@ async function generateResult(prompt) {
 async function generateStream(prompt, onData) {
     const stream = await ai.models.generateContentStream({
         model: "gemini-2.0-flash",
-        contents: prompt
+        contents: prompt,
+        config: {
+            systemInstruction: `
+            give response in less than 50 words and in plain text format not in md
+            `
+        }
     })
 
     let result = ""

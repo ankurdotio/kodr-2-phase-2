@@ -3,10 +3,16 @@ const cookie = require("cookie")
 const jwt = require("jsonwebtoken")
 const aiService = require("../services/ai.service")
 const messageModel = require("../models/message.model")
+const { v4: uuidv4 } = require("uuid")
 
 
 function initSocket(httpServer) {
-    const io = new Server(httpServer)
+    const io = new Server(httpServer, {
+        cors: {
+            origin: 'http://localhost:5173', // Adjust this to your frontend's origin
+            credentials: true,
+        }
+    })
 
 
     io.use((socket, next) => {
@@ -38,6 +44,8 @@ function initSocket(httpServer) {
 
         socket.on("ai-message", async (message) => {
 
+            const messageId = uuidv4()
+
             await messageModel.create({
                 chat: message.chat,
                 user: socket.user.id,
@@ -57,6 +65,7 @@ function initSocket(httpServer) {
 
             const result = await aiService.generateStream(history, (text) => {
                 socket.emit("ai-response", {
+                    _id: messageId,
                     chat: message.chat,
                     text
                 })

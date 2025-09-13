@@ -1,0 +1,181 @@
+.register-wrapper {
+  width: 100%;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-8) var(--space-4) var(--space-10);
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+.register-container {
+  width: 100%;
+  max-width: var(--max-content-width);
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.register-heading {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.register-heading h1 {
+  margin: 0;
+  font-size: 1.9rem;
+  letter-spacing: -0.5px;
+}
+
+.register-heading p {
+  margin: 0;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-dim);
+}
+
+.form-card {
+  background: linear-gradient(145deg, var(--color-surface), var(--color-surface-alt));
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6) var(--space-5) var(--space-6);
+  box-shadow: var(--shadow-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.form-grid {
+  display: grid;
+  gap: var(--space-5);
+}
+
+@media (min-width: 600px) {
+  .form-grid.two-col {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.field label {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--color-text-dim);
+  letter-spacing: .5px;
+  text-transform: uppercase;
+}
+
+.input-shell {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-shell input {
+  width: 100%;
+  background: var(--color-surface-alt);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-3) var(--space-4);
+  color: var(--color-text);
+  font-size: var(--font-size-base);
+  font-family: inherit;
+  outline: none;
+  transition: border-color var(--transition-fast), background var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.input-shell input::placeholder { color: var(--color-text-dim); }
+
+.input-shell input:focus {
+  border-color: var(--color-border-accent);
+  box-shadow: 0 0 0 2px rgba(59,130,246,0.35);
+}
+
+.password-toggle {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  color: var(--color-text-dim);
+  border: none;
+  font-size: var(--font-size-sm);
+  padding: var(--space-1) var(--space-2);
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  transition: color var(--transition-fast), background var(--transition-fast);
+}
+.password-toggle:hover { color: var(--color-text); }
+.password-toggle:focus-visible { outline: 2px solid var(--color-focus-ring); }
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.submit-btn {
+  appearance: none;
+  border: none;
+  border-radius: var(--radius-md);
+  background: var(--color-primary);
+  color: #fff;
+  font-weight: 600;
+  font-size: var(--font-size-base);
+  padding: var(--space-3) var(--space-5);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  box-shadow: var(--shadow-sm);
+  transition: background var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+.submit-btn:hover { background: var(--color-primary-hover); }
+.submit-btn:active { transform: translateY(1px); }
+.submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.json-preview-wrapper {
+  background: var(--color-surface-alt);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  font-size: var(--font-size-sm);
+  max-height: 260px;
+  overflow: auto;
+  line-height: 1.4;
+}
+
+.helper-row {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.helper-row small {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-dim);
+}
+
+footer.register-footer {
+  margin-top: auto;
+  padding: var(--space-8) var(--space-4) var(--space-4);
+  text-align: center;
+  font-size: var(--font-size-xs);
+  color: var(--color-text-dim);
+}
+
+/* Desktop enhancements */
+@media (min-width: 880px) {
+  .register-wrapper {
+    padding-top: calc(var(--space-10) + 1rem);
+  }
+  .form-card { padding: var(--space-8) var(--space-8) var(--space-8); }
+  .register-heading h1 { font-size: 2.2rem; }
+}

@@ -18,6 +18,15 @@ async function createChat(req, res) {
 
 }
 
+
+async function getUserChats(req, res) {
+    const chats = await chatModel.find({ user: req.user.id }).sort({ createdAt: -1 });
+    res.status(200).json({
+        chats
+    })
+}
+
 module.exports = {
-    createChat
+    createChat,
+    getUserChats
 }
