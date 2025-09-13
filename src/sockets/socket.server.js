@@ -2,6 +2,8 @@ const { Server } = require("socket.io")
 const cookie = require("cookie")
 const jwt = require("jsonwebtoken")
 const aiService = require("../services/ai.service")
+const messageModel = require("../models/message.model")
+
 
 function initSocket(httpServer) {
     const io = new Server(httpServer)
@@ -36,14 +38,63 @@ function initSocket(httpServer) {
 
         socket.on("ai-message", async (message) => {
 
-            // const response = await aiService.generateResult(message)
-            // socket.emit("ai-response", response)
+            await messageModel.create({
+                chat: message.chat,
+                user: socket.user.id,
+                role: "user",
+                text: message.text
+            })
 
-            aiService.generateStream(message, (textChunk) => {
-                socket.emit("ai-response", textChunk)
+            const history = (await messageModel.find({
+                chat: message.chat
+            })).map(message => ({
+                role: message.role,
+                parts: [ {
+                    text: message.text
+                } ]
+            }))
+
+
+            const result = await aiService.generateStream(history, (text) => {
+                socket.emit("ai-response", {
+                    chat: message.chat,
+                    text
+                })
+            })
+
+            await messageModel.create({
+                chat: message.chat,
+                user: socket.user.id,
+                role: "model",
+                text: result
             })
 
         })
+
+
+        /* 
+
+        find = [{
+        
+        chat: "chatId",
+        user: "userId",
+        role: "user",
+        text: "Hello"
+        
+        }]
+        
+        memory = [
+        {
+            role: "user",
+            parts: [
+                {
+                    text: "Hello"
+                }
+            ]
+        }
+        ]
+        
+        */
 
         socket.on("disconnect", () => {
             console.log("A user disconnected")

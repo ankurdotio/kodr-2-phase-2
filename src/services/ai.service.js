@@ -17,68 +17,21 @@ async function generateResult(prompt) {
 
 }
 
-const memory = [
-    {
-        role: "user",
-
-        parts: [ {
-            text: "who are you ?"
-        } ]
-
-    },
-    {
-        role: "model",
-
-        parts: [ {
-            text: "I am an AI created by Google"
-        } ]
-
-    },
-    {
-        role: "user",
-
-        parts: [ {
-            text: "what was my first question ?"
-        } ]
-
-    },
-    {
-        role: "model",
-
-        parts: [ {
-            text: "As  an AI, I don't have memory of past conversations. Therefore, I don't know what your first question to me was."
-        } ]
-
-    }
-]
 
 async function generateStream(prompt, onData) {
-
-    memory.push({
-        role: "user",
-        parts: [ {
-            text: prompt
-        } ]
-    })
-
     const stream = await ai.models.generateContentStream({
         model: "gemini-2.0-flash",
-        contents: memory
+        contents: prompt
     })
 
-    let responseText = ""
+    let result = ""
 
     for await (const chunk of stream) {
-        responseText += chunk.text
+        result += chunk.text
         onData(chunk.text)
     }
 
-    memory.push({
-        role: "model",
-        parts: [ {
-            text: responseText
-        } ]
-    })
+    return result
 
 }
 
